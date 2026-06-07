@@ -1,0 +1,3 @@
+@echo off
+echo 正在查看服务日志，按 Ctrl+C 退出...
+docker-compose logs -f

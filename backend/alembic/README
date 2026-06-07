@@ -1,0 +1,8 @@
+Alembic database migration configuration for Cat Hotel management system.
+
+Usage:
+  alembic revision --autogenerate -m "description"  # Generate new migration
+  alembic upgrade head                              # Apply all migrations
+  alembic downgrade -1                              # Revert last migration
+  alembic history                                   # Show migration history
+  alembic current                                   # Show current revision
