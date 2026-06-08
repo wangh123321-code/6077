@@ -1,25 +1,29 @@
 export interface User {
   id: number
-  username: string
-  email: string
   phone: string
+  nickname: string
   avatar: string
-  role: 'user' | 'admin'
-  memberLevel: number
-  memberPoints: number
+  role: 'user' | 'staff' | 'admin'
   createdAt: string
+  updatedAt: string
+  memberLevel?: number
+  memberPoints?: number
 }
 
 export interface CatRoom {
   id: number
   name: string
-  type: string
-  size: string
-  price: number
   description: string
-  images: string[]
+  price_per_day: number
+  price: number
   facilities: string[]
-  status: 'available' | 'occupied' | 'maintenance'
+  images: string[]
+  status: 'available' | 'occupied' | 'maintenance' | 'cleaning'
+  area: number
+  floor: number
+  location: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Service {
@@ -68,15 +72,14 @@ export interface ApiResponse<T> {
 }
 
 export interface LoginRequest {
-  username: string
+  phone: string
   password: string
 }
 
 export interface RegisterRequest {
-  username: string
-  email: string
   phone: string
   password: string
+  nickname: string
 }
 
 export interface BookingRequest {

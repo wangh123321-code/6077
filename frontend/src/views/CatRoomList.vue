@@ -189,21 +189,28 @@ async function fetchRooms() {
   loading.value = true
   try {
     const params = {
-      ...filterForm,
-      minPrice: priceRange.value[0],
-      maxPrice: priceRange.value[1],
-      facilities: selectedFacilities.value
+      page: filterForm.page,
+      page_size: filterForm.pageSize,
+      status: filterForm.status,
+      min_price: priceRange.value[0],
+      max_price: priceRange.value[1],
+      check_in_date: filterForm.checkInDate || undefined,
+      check_out_date: filterForm.checkOutDate || undefined
     }
     const res = await getCatRoomList(params)
-    rooms.value = res.items
+    rooms.value = res.items.map((item: CatRoom) => ({
+      ...item,
+      price: item.price_per_day
+    }))
     total.value = res.total
   } catch (error) {
     rooms.value = [
       {
         id: 1,
         name: '豪华大床房',
-        type: '豪华型',
-        size: '15㎡',
+        area: 15,
+        floor: 2,
+        price_per_day: 299,
         price: 299,
         description: '宽敞明亮的独立房间，配备猫爬架和观景窗',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20cat%20room%20modern&image_size=landscape_16_9'],
@@ -213,8 +220,9 @@ async function fetchRooms() {
       {
         id: 2,
         name: '标准双人间',
-        type: '标准型',
-        size: '10㎡',
+        area: 10,
+        floor: 1,
+        price_per_day: 199,
         price: 199,
         description: '温馨舒适的标准房间，适合两只猫咪入住',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20cat%20room&image_size=landscape_16_9'],

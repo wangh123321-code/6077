@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import type { User, LoginRequest, RegisterRequest } from '@/types'
-import { login, logout, getUserInfo, register, updateUserInfo, changePassword } from '@/api/auth'
+import { login, logout, getUserInfo, register } from '@/api/auth'
 import { setToken, removeToken, getToken, setUser, getUser, removeUser, clearAuth } from '@/utils/auth'
 
 export const useUserStore = defineStore('user', () => {
@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', () => {
   const isLoggedIn = computed(() => !!token.value)
   const isAdmin = computed(() => user.value?.role === 'admin')
   const userAvatar = computed(() => user.value?.avatar || '')
-  const userName = computed(() => user.value?.username || '')
+  const userName = computed(() => user.value?.nickname || '')
   const memberLevel = computed(() => user.value?.memberLevel || 1)
   const memberPoints = computed(() => user.value?.memberPoints || 0)
 
@@ -42,10 +42,11 @@ export const useUserStore = defineStore('user', () => {
   async function handleLogin(data: LoginRequest) {
     loading.value = true
     try {
-      const res = await login(data)
-      token.value = res.token
-      user.value = res.user
-      return res
+      const tokenRes = await login(data)
+      token.value = tokenRes.access_token
+      const userInfo = await getUserInfo()
+      user.value = userInfo
+      return { token: tokenRes.access_token, user: userInfo }
     } finally {
       loading.value = false
     }

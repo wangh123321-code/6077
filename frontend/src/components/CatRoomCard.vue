@@ -36,8 +36,8 @@
         </div>
       </div>
       <div class="room-tags">
-        <el-tag size="small" type="primary">{{ catRoom.type }}</el-tag>
-        <el-tag size="small">{{ catRoom.size }}</el-tag>
+        <el-tag v-if="catRoom.area" size="small" type="primary">{{ catRoom.area }}㎡</el-tag>
+        <el-tag v-if="catRoom.floor" size="small">{{ catRoom.floor }}楼</el-tag>
       </div>
       <p class="room-desc">{{ catRoom.description }}</p>
       <div class="room-facilities">

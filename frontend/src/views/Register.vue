@@ -1,16 +1,16 @@
 <template>
-  <div class="login-page">
-    <div class="login-container">
-      <div class="login-header">
+  <div class="register-page">
+    <div class="register-container">
+      <div class="register-header">
         <h1>猫咪酒店管理系统</h1>
-        <p>欢迎回来，请登录您的账户</p>
+        <p>创建新账户，享受更优质的服务</p>
       </div>
       <el-form
         ref="formRef"
         :model="form"
         :rules="rules"
-        class="login-form"
-        @keyup.enter="handleLogin"
+        class="register-form"
+        @keyup.enter="handleRegister"
       >
         <el-form-item prop="phone">
           <el-input
@@ -18,33 +18,49 @@
             placeholder="请输入手机号"
             size="large"
             :prefix-icon="User"
+            maxlength="11"
+          />
+        </el-form-item>
+        <el-form-item prop="nickname">
+          <el-input
+            v-model="form.nickname"
+            placeholder="请输入昵称"
+            size="large"
+            :prefix-icon="UserFilled"
+            maxlength="20"
           />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
             v-model="form.password"
             type="password"
-            placeholder="请输入密码"
+            placeholder="请输入密码（至少6位）"
             size="large"
             :prefix-icon="Lock"
             show-password
           />
         </el-form-item>
-        <el-form-item>
-          <el-checkbox v-model="form.remember">记住我</el-checkbox>
-          <span class="forgot-password">忘记密码？</span>
+        <el-form-item prop="confirmPassword">
+          <el-input
+            v-model="form.confirmPassword"
+            type="password"
+            placeholder="请再次输入密码"
+            size="large"
+            :prefix-icon="Lock"
+            show-password
+          />
         </el-form-item>
         <el-button
           type="primary"
           size="large"
-          class="login-btn"
+          class="register-btn"
           :loading="loading"
-          @click="handleLogin"
+          @click="handleRegister"
         >
-          登录
+          注册
         </el-button>
-        <div class="register-link">
-          还没有账户？<router-link to="/register">立即注册</router-link>
+        <div class="login-link">
+          已有账户？<router-link to="/login">立即登录</router-link>
         </div>
       </el-form>
     </div>
@@ -53,12 +69,11 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
+import { User, Lock, UserFilled } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 
-const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -67,35 +82,53 @@ const loading = ref(false)
 
 const form = reactive({
   phone: '',
+  nickname: '',
   password: '',
-  remember: false
+  confirmPassword: ''
 })
+
+const validateConfirmPassword = (_rule: any, value: string, callback: any) => {
+  if (!value) {
+    callback(new Error('请再次输入密码'))
+  } else if (value !== form.password) {
+    callback(new Error('两次输入的密码不一致'))
+  } else {
+    callback()
+  }
+}
 
 const rules: FormRules = {
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
   ],
+  nickname: [
+    { required: true, message: '请输入昵称', trigger: 'blur' },
+    { min: 2, max: 20, message: '昵称长度在2-20个字符', trigger: 'blur' }
+  ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, message: '密码至少6位', trigger: 'blur' }
+  ],
+  confirmPassword: [
+    { required: true, validator: validateConfirmPassword, trigger: 'blur' }
   ]
 }
 
-async function handleLogin() {
+async function handleRegister() {
   if (!formRef.value) return
   const valid = await formRef.value.validate().catch(() => false)
   if (!valid) return
 
   loading.value = true
   try {
-    await userStore.handleLogin({
+    await userStore.handleRegister({
       phone: form.phone,
+      nickname: form.nickname,
       password: form.password
     })
-    ElMessage.success('登录成功')
-    const redirect = route.query.redirect as string || '/'
-    router.push(redirect)
+    ElMessage.success('注册成功，请登录')
+    router.push('/login')
   } catch (error) {
     // 错误已在API拦截器中处理
   } finally {
@@ -105,7 +138,7 @@ async function handleLogin() {
 </script>
 
 <style scoped lang="scss">
-.login-page {
+.register-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -113,7 +146,7 @@ async function handleLogin() {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 24px;
 
-  .login-container {
+  .register-container {
     width: 100%;
     max-width: 420px;
     background: #fff;
@@ -122,7 +155,7 @@ async function handleLogin() {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   }
 
-  .login-header {
+  .register-header {
     text-align: center;
     margin-bottom: 40px;
 
@@ -139,24 +172,13 @@ async function handleLogin() {
     }
   }
 
-  .login-form {
-    .forgot-password {
-      float: right;
-      color: #409eff;
-      font-size: 14px;
-      cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .login-btn {
+  .register-form {
+    .register-btn {
       width: 100%;
       margin-top: 24px;
     }
 
-    .register-link {
+    .login-link {
       text-align: center;
       margin-top: 24px;
       font-size: 14px;

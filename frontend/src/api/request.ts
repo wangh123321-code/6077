@@ -62,8 +62,8 @@ service.interceptors.response.use(
   (response: AxiosResponse) => {
     removePendingRequest(response.config)
     const res = response.data
-    if (res.code !== 200) {
-      if (res.code === 401) {
+    if (res.code !== 0) {
+      if (res.code === 1002 || res.code === 2001 || res.code === 2002) {
         ElMessageBox.confirm('登录状态已过期，请重新登录', '提示', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
@@ -72,11 +72,11 @@ service.interceptors.response.use(
           clearAuth()
           router.push('/login')
         }).catch(() => {})
-      } else if (res.code === 403) {
+      } else if (res.code === 1003) {
         ElMessage.error('没有权限访问该资源')
-      } else if (res.code === 404) {
+      } else if (res.code === 1004) {
         ElMessage.error('请求的资源不存在')
-      } else if (res.code === 500) {
+      } else if (res.code >= 3000 && res.code < 4000) {
         ElMessage.error('服务器内部错误')
       } else {
         ElMessage.error(res.message || '请求失败')

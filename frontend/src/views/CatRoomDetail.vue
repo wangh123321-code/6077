@@ -32,8 +32,9 @@
             <div>
               <h1>{{ catRoom.name }}</h1>
               <div class="room-tags">
-                <el-tag size="large" type="primary">{{ catRoom.type }}</el-tag>
-                <el-tag size="large" type="info">{{ catRoom.size }}</el-tag>
+                <el-tag v-if="catRoom.area" size="large" type="primary">{{ catRoom.area }}㎡</el-tag>
+                <el-tag v-if="catRoom.floor" size="large" type="info">{{ catRoom.floor }}楼</el-tag>
+                <el-tag v-if="catRoom.location" size="large">{{ catRoom.location }}</el-tag>
               </div>
             </div>
             <el-tag
@@ -47,7 +48,7 @@
 
           <div class="room-price">
             <span class="currency">¥</span>
-            <span class="price">{{ catRoom.price }}</span>
+            <span class="price">{{ catRoom.price || catRoom.price_per_day }}</span>
             <span class="unit">/晚</span>
           </div>
 
@@ -239,7 +240,7 @@ import {
   CircleCheckFilled
 } from '@element-plus/icons-vue'
 import ServiceSelector from '@/components/ServiceSelector.vue'
-import { getCatRoomDetail, getCatRoomAvailability } from '@/api/catRoom'
+import { getCatRoomDetail, getAvailableCatRooms } from '@/api/catRoom'
 import { getServiceList } from '@/api/service'
 import { useBookingStore } from '@/stores/booking'
 import { useUserStore } from '@/stores/user'
@@ -330,7 +331,8 @@ const servicesTotalPrice = computed(() => {
 
 const roomTotalPrice = computed(() => {
   if (!catRoom.value) return 0
-  return catRoom.value.price * nights.value
+  const price = catRoom.value.price || catRoom.value.price_per_day
+  return price * nights.value
 })
 
 const totalPrice = computed(() => {
@@ -364,12 +366,12 @@ function previewImage(index: number) {
 async function checkAvailability() {
   if (!dateRange.value || !catRoom.value) return
   try {
-    const res = await getCatRoomAvailability(
-      catRoom.value.id,
+    const availableRooms = await getAvailableCatRooms(
       dateRange.value[0],
       dateRange.value[1]
     )
-    dateUnavailable.value = !res.available
+    const isAvailable = availableRooms.some((room: CatRoom) => room.id === catRoom.value!.id)
+    dateUnavailable.value = !isAvailable
   } catch {
     dateUnavailable.value = false
   }
@@ -392,7 +394,10 @@ async function fetchDetail() {
       getCatRoomDetail(id),
       getServiceList({ page: 1, pageSize: 100 })
     ])
-    catRoom.value = roomRes
+    catRoom.value = {
+      ...roomRes,
+      price: roomRes.price || roomRes.price_per_day
+    }
     services.value = serviceRes.items
 
     const today = new Date()
