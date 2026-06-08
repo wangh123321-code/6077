@@ -1,5 +1,5 @@
-import { post, get } from './request'
-import type { User, LoginRequest, RegisterRequest, ApiResponse } from '@/types'
+import { post, get, put } from './request'
+import type { User, LoginRequest, RegisterRequest } from '@/types'
 
 export interface TokenResponse {
   access_token: string
@@ -22,4 +22,12 @@ export function logout(): Promise<Record<string, any>> {
 
 export function getUserInfo(): Promise<User> {
   return get<User>('/auth/me')
+}
+
+export function updateUserInfo(data: Partial<User>): Promise<User> {
+  return put<User>('/auth/me', data)
+}
+
+export function changePassword(data: { oldPassword: string; newPassword: string }): Promise<Record<string, any>> {
+  return post<Record<string, any>>('/auth/change-password', data)
 }

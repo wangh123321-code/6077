@@ -51,11 +51,12 @@
               <div class="room-details">
                 <h4>
                   {{ order.catRoom.name }}
-                  <el-tag size="small" type="primary">{{ order.catRoom.type }}</el-tag>
                 </h4>
                 <p class="room-size">
                   <el-icon><Grid /></el-icon>
-                  {{ order.catRoom.size }}
+                  <span v-if="order.catRoom.area">{{ order.catRoom.area }}㎡</span>
+                  <span v-if="order.catRoom.floor" style="margin-left: 12px;">{{ order.catRoom.floor }}楼</span>
+                  <span v-if="order.catRoom.location" style="margin-left: 12px;">{{ order.catRoom.location }}</span>
                 </p>
                 <div class="date-range">
                   <div class="date-item">
@@ -434,8 +435,10 @@ const mockOrder: Booking = {
   catRoom: {
     id: 1,
     name: '豪华大床房',
-    type: '豪华型',
-    size: '15㎡',
+    area: 15,
+    floor: 2,
+    location: 'A区',
+    pricePerDay: 299,
     price: 299,
     description: '',
     images: [
@@ -444,7 +447,9 @@ const mockOrder: Booking = {
       'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cat%20playground%20indoor&image_size=landscape_16_9'
     ],
     facilities: ['空调', '24h监控', '独立卫生间', '自动喂食器', '猫爬架', '落地窗'],
-    status: 'available'
+    status: 'available',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   checkInDate: '2024-01-15',
   checkOutDate: '2024-01-20',

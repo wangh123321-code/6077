@@ -194,35 +194,47 @@ async function fetchFeaturedRooms() {
       {
         id: 1,
         name: '豪华大床房',
-        type: '豪华型',
-        size: '15㎡',
+        area: 15,
+        floor: 2,
+        location: 'A区',
+        pricePerDay: 299,
         price: 299,
         description: '宽敞明亮的独立房间，配备猫爬架和观景窗',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20cat%20room%20modern&image_size=landscape_16_9'],
         facilities: ['空调', '猫爬架', '观景窗', '摄像头'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 2,
         name: '标准双人间',
-        type: '标准型',
-        size: '10㎡',
+        area: 10,
+        floor: 1,
+        location: 'B区',
+        pricePerDay: 199,
         price: 199,
         description: '温馨舒适的标准房间，适合两只猫咪入住',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20cat%20room&image_size=landscape_16_9'],
         facilities: ['空调', '猫窝', '玩具', '摄像头'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 3,
         name: 'VIP总统套房',
-        type: 'VIP型',
-        size: '25㎡',
+        area: 25,
+        floor: 3,
+        location: 'VIP区',
+        pricePerDay: 499,
         price: 499,
         description: '顶级奢华套房，专属管家服务，独立休闲区',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=vip%20luxury%20cat%20suite&image_size=landscape_16_9'],
         facilities: ['空调', '猫爬架', '跑步机', '独立卫浴', '24h监控'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       }
     ]
   } finally {

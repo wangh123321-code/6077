@@ -20,7 +20,7 @@ from app.core.security import (
     hash_password,
 )
 from app.models.user import User, UserRole
-from app.schemas import ApiResponse, UserCreate, UserLogin, UserResponse, TokenResponse
+from app.schemas import ApiResponse, UserCreate, UserLogin, UserResponse, TokenResponse, UserUpdate
 
 router = APIRouter()
 
@@ -131,4 +131,52 @@ async def get_me(
         code=0,
         message="success",
         data=UserResponse.model_validate(current_user),
+    )
+
+
+@router.put("/me", response_model=ApiResponse[UserResponse])
+async def update_me(
+    user_data: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
+    if user_data.nickname is not None:
+        current_user.nickname = user_data.nickname
+    if user_data.avatar is not None:
+        current_user.avatar = user_data.avatar
+    if user_data.password is not None:
+        current_user.password_hash = hash_password(user_data.password)
+    
+    await db.commit()
+    await db.refresh(current_user)
+    
+    return ApiResponse(
+        code=0,
+        message="更新成功",
+        data=UserResponse.model_validate(current_user),
+    )
+
+
+@router.post("/change-password", response_model=ApiResponse[dict])
+async def change_password(
+    password_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Any:
+    old_password = password_data.get("oldPassword")
+    new_password = password_data.get("newPassword")
+    
+    if not verify_password(old_password, current_user.password_hash):
+        raise UnauthorizedException(
+            message="原密码错误",
+            code=ErrorCode.INVALID_CREDENTIALS,
+        )
+    
+    current_user.password_hash = hash_password(new_password)
+    await db.commit()
+    
+    return ApiResponse(
+        code=0,
+        message="密码修改成功",
+        data={},
     )

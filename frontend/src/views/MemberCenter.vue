@@ -10,11 +10,11 @@
           <el-card class="user-card">
             <div class="user-avatar">
               <el-avatar :size="80" :src="userStore.user?.avatar">
-                {{ userStore.user?.username?.charAt(0) }}
+                {{ userStore.user?.nickname?.charAt(0) }}
               </el-avatar>
             </div>
             <div class="user-info">
-              <h3>{{ userStore.user?.username }}</h3>
+              <h3>{{ userStore.user?.nickname }}</h3>
               <p class="user-role">
                 <el-tag size="small" :type="userStore.user?.role === 'admin' ? 'danger' : 'primary'">
                   {{ userStore.user?.role === 'admin' ? '管理员' : '普通用户' }}
@@ -53,14 +53,11 @@
               <h2>个人信息</h2>
             </template>
             <el-form :model="userForm" label-width="100px" class="user-form">
-              <el-form-item label="用户名">
-                <el-input v-model="userForm.username" disabled />
-              </el-form-item>
-              <el-form-item label="邮箱">
-                <el-input v-model="userForm.email" />
+              <el-form-item label="昵称">
+                <el-input v-model="userForm.nickname" />
               </el-form-item>
               <el-form-item label="手机号">
-                <el-input v-model="userForm.phone" />
+                <el-input v-model="userForm.phone" disabled />
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="handleUpdateInfo">保存修改</el-button>
@@ -184,8 +181,7 @@ const memberInfo = ref<Member | null>(null)
 const pointsHistory = ref<{ id: number; type: string; points: number; description: string; createdAt: string }[]>([])
 
 const userForm = reactive({
-  username: userStore.user?.username || '',
-  email: userStore.user?.email || '',
+  nickname: userStore.user?.nickname || '',
   phone: userStore.user?.phone || ''
 })
 

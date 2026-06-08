@@ -190,17 +190,16 @@ async function fetchRooms() {
   try {
     const params = {
       page: filterForm.page,
-      page_size: filterForm.pageSize,
-      status: filterForm.status,
+      pageSize: filterForm.pageSize,
       min_price: priceRange.value[0],
       max_price: priceRange.value[1],
       check_in_date: filterForm.checkInDate || undefined,
       check_out_date: filterForm.checkOutDate || undefined
     }
-    const res = await getCatRoomList(params)
+    const res = await getCatRoomList(params as any)
     rooms.value = res.items.map((item: CatRoom) => ({
       ...item,
-      price: item.price_per_day
+      price: item.pricePerDay
     }))
     total.value = res.total
   } catch (error) {
@@ -210,68 +209,90 @@ async function fetchRooms() {
         name: '豪华大床房',
         area: 15,
         floor: 2,
-        price_per_day: 299,
+        location: 'A区',
+        pricePerDay: 299,
         price: 299,
         description: '宽敞明亮的独立房间，配备猫爬架和观景窗',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20cat%20room%20modern&image_size=landscape_16_9'],
         facilities: ['空调', '猫爬架', '观景窗', '摄像头'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 2,
         name: '标准双人间',
         area: 10,
         floor: 1,
-        price_per_day: 199,
+        location: 'B区',
+        pricePerDay: 199,
         price: 199,
         description: '温馨舒适的标准房间，适合两只猫咪入住',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20cat%20room&image_size=landscape_16_9'],
         facilities: ['空调', '猫窝', '玩具', '摄像头'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 3,
         name: 'VIP总统套房',
-        type: 'VIP型',
-        size: '25㎡',
+        area: 25,
+        floor: 3,
+        location: 'VIP区',
+        pricePerDay: 499,
         price: 499,
         description: '顶级奢华套房，专属管家服务，独立休闲区',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=vip%20luxury%20cat%20suite&image_size=landscape_16_9'],
         facilities: ['空调', '猫爬架', '跑步机', '独立卫浴', '24h监控'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 4,
         name: '温馨单人间',
-        type: '标准型',
-        size: '8㎡',
+        area: 8,
+        floor: 1,
+        location: 'B区',
+        pricePerDay: 129,
         price: 129,
         description: '小巧温馨的独立空间，适合单只猫咪',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=small%20cozy%20cat%20room&image_size=landscape_16_9'],
         facilities: ['空调', '猫窝', '玩具'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 5,
         name: '豪华观景房',
-        type: '豪华型',
-        size: '18㎡',
+        area: 18,
+        floor: 2,
+        location: 'A区',
+        pricePerDay: 359,
         price: 359,
         description: '全景落地窗，阳光充足，视野开阔',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cat%20room%20with%20view&image_size=landscape_16_9'],
         facilities: ['空调', '猫爬架', '观景窗', '摄像头', '玩具'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       },
       {
         id: 6,
         name: 'VIP豪华套房',
-        type: 'VIP型',
-        size: '30㎡',
+        area: 30,
+        floor: 3,
+        location: 'VIP区',
+        pricePerDay: 599,
         price: 599,
         description: '超大面积，独立活动区，专属管家24小时服务',
         images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20vip%20cat%20suite&image_size=landscape_16_9'],
         facilities: ['空调', '猫爬架', '跑步机', '独立卫浴', '24h监控', '玩具'],
-        status: 'available'
+        status: 'available',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z'
       }
     ]
     total.value = 12

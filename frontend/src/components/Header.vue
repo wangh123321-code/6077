@@ -27,9 +27,9 @@
           <el-dropdown @command="handleCommand">
             <span class="user-info">
               <el-avatar :size="32" :src="userStore.user?.avatar">
-                {{ userStore.user?.username?.charAt(0) }}
+                {{ userStore.user?.nickname?.charAt(0) }}
               </el-avatar>
-              <span class="username">{{ userStore.user?.username }}</span>
+              <span class="username">{{ userStore.user?.nickname }}</span>
               <el-icon><CaretBottom /></el-icon>
             </span>
             <template #dropdown>

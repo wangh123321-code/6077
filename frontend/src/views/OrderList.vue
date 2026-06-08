@@ -102,10 +102,11 @@
             <div class="room-info">
               <h3 v-if="order.catRoom">
                 {{ order.catRoom.name }}
-                <el-tag size="small" type="primary" style="margin-left: 8px;">{{ order.catRoom.type }}</el-tag>
               </h3>
               <p v-if="order.catRoom" class="room-size">
-                {{ order.catRoom.size }}
+                <span v-if="order.catRoom.area">{{ order.catRoom.area }}㎡</span>
+                <span v-if="order.catRoom.floor" style="margin-left: 12px;">{{ order.catRoom.floor }}楼</span>
+                <span v-if="order.catRoom.location" style="margin-left: 12px;">{{ order.catRoom.location }}</span>
               </p>
               <p class="date-info">
                 <el-icon><Calendar /></el-icon>
@@ -278,13 +279,17 @@ const mockOrders: Booking[] = [
     catRoom: {
       id: 1,
       name: '豪华大床房',
-      type: '豪华型',
-      size: '15㎡',
+      area: 15,
+      floor: 2,
+      location: 'A区',
+      pricePerDay: 299,
       price: 299,
       description: '',
       images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20cat%20room%20modern&image_size=landscape_16_9'],
       facilities: [],
-      status: 'available'
+      status: 'available',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z'
     },
     checkInDate: '2024-01-15',
     checkOutDate: '2024-01-20',
@@ -309,13 +314,17 @@ const mockOrders: Booking[] = [
     catRoom: {
       id: 2,
       name: '标准双人间',
-      type: '标准型',
-      size: '10㎡',
+      area: 10,
+      floor: 1,
+      location: 'B区',
+      pricePerDay: 199,
       price: 199,
       description: '',
       images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20cat%20room&image_size=landscape_16_9'],
       facilities: [],
-      status: 'available'
+      status: 'available',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z'
     },
     checkInDate: '2024-01-05',
     checkOutDate: '2024-01-08',
@@ -337,13 +346,17 @@ const mockOrders: Booking[] = [
     catRoom: {
       id: 3,
       name: 'VIP总统套房',
-      type: 'VIP型',
-      size: '25㎡',
+      area: 25,
+      floor: 3,
+      location: 'VIP区',
+      pricePerDay: 499,
       price: 499,
       description: '',
       images: ['https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=vip%20luxury%20cat%20suite&image_size=landscape_16_9'],
       facilities: [],
-      status: 'available'
+      status: 'available',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z'
     },
     checkInDate: '2024-01-01',
     checkOutDate: '2024-01-03',

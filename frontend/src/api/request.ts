@@ -37,12 +37,47 @@ const service: AxiosInstance = axios.create({
   }
 })
 
+function camelToSnake(str: string): string {
+  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
+}
+
+function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+}
+
+function convertKeysToSnake(obj: any): any {
+  if (obj === null || obj === undefined) return obj
+  if (Array.isArray(obj)) return obj.map(convertKeysToSnake)
+  if (typeof obj !== 'object') return obj
+
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(obj)) {
+    result[camelToSnake(key)] = convertKeysToSnake(obj[key])
+  }
+  return result
+}
+
+function convertKeysToCamel(obj: any): any {
+  if (obj === null || obj === undefined) return obj
+  if (Array.isArray(obj)) return obj.map(convertKeysToCamel)
+  if (typeof obj !== 'object') return obj
+
+  const result: Record<string, any> = {}
+  for (const key of Object.keys(obj)) {
+    result[snakeToCamel(key)] = convertKeysToCamel(obj[key])
+  }
+  return result
+}
+
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     addPendingRequest(config)
     const token = getToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+    }
+    if (config.params) {
+      config.params = convertKeysToSnake(config.params)
     }
     const timestamp = Date.now()
     if (config.params) {
@@ -83,7 +118,7 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message || '请求失败'))
     }
-    return res.data
+    return convertKeysToCamel(res.data)
   },
   (error) => {
     removePendingRequest(error.config || {})

@@ -14,7 +14,7 @@ export interface CatRoom {
   id: number
   name: string
   description: string
-  price_per_day: number
+  pricePerDay: number
   price: number
   facilities: string[]
   images: string[]

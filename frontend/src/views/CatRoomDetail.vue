@@ -48,7 +48,7 @@
 
           <div class="room-price">
             <span class="currency">¥</span>
-            <span class="price">{{ catRoom.price || catRoom.price_per_day }}</span>
+            <span class="price">{{ catRoom.price || catRoom.pricePerDay }}</span>
             <span class="unit">/晚</span>
           </div>
 
@@ -314,7 +314,7 @@ const shortcuts = [
 ]
 
 const selectedServices = computed(() => {
-  return services.value.filter((s) => selectedServiceIds.value.includes(s.id))
+  return (services.value || []).filter((s) => selectedServiceIds.value.includes(s.id))
 })
 
 const nights = computed(() => {
@@ -331,7 +331,7 @@ const servicesTotalPrice = computed(() => {
 
 const roomTotalPrice = computed(() => {
   if (!catRoom.value) return 0
-  const price = catRoom.value.price || catRoom.value.price_per_day
+  const price = catRoom.value.price || catRoom.value.pricePerDay
   return price * nights.value
 })
 
@@ -396,7 +396,7 @@ async function fetchDetail() {
     ])
     catRoom.value = {
       ...roomRes,
-      price: roomRes.price || roomRes.price_per_day
+      price: roomRes.price || roomRes.pricePerDay
     }
     services.value = serviceRes.items
 

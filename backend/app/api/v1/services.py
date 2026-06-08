@@ -1,7 +1,8 @@
+import math
 from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, Query, status
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_admin, get_db
@@ -10,6 +11,7 @@ from app.models.service import Service, ServiceType
 from app.models.user import User
 from app.schemas import (
     ApiResponse,
+    PaginationResponse,
     ServiceCreate,
     ServiceResponse,
     ServiceUpdate,
@@ -18,8 +20,10 @@ from app.schemas import (
 router = APIRouter()
 
 
-@router.get("", response_model=ApiResponse[List[ServiceResponse]])
+@router.get("", response_model=ApiResponse[PaginationResponse[ServiceResponse]])
 async def get_services(
+    page: int = Query(1, ge=1, description="页码"),
+    page_size: int = Query(10, ge=1, le=100, description="每页数量"),
     type: Optional[ServiceType] = Query(None, description="按类型筛选"),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
@@ -28,15 +32,27 @@ async def get_services(
     if type:
         query = query.where(Service.type == type)
 
-    query = query.order_by(Service.id.desc())
+    count_query = select(func.count()).select_from(query.subquery())
+    total_result = await db.execute(count_query)
+    total = total_result.scalar_one()
+
+    query = query.order_by(Service.id.desc()).offset((page - 1) * page_size).limit(page_size)
 
     result = await db.execute(query)
     items = result.scalars().all()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+
     return ApiResponse(
         code=0,
         message="success",
-        data=[ServiceResponse.model_validate(item) for item in items],
+        data=PaginationResponse(
+            items=[ServiceResponse.model_validate(item) for item in items],
+            total=total,
+            page=page,
+            page_size=page_size,
+            total_pages=total_pages,
+        ),
     )
 
 

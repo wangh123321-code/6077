@@ -28,8 +28,9 @@
                 <div class="room-details">
                   <h3>{{ bookingStore.selectedCatRoom.name }}</h3>
                   <p class="room-type">
-                    <el-tag size="small" type="primary">{{ bookingStore.selectedCatRoom.type }}</el-tag>
-                    <el-tag size="small" type="info">{{ bookingStore.selectedCatRoom.size }}</el-tag>
+                    <el-tag v-if="bookingStore.selectedCatRoom.area" size="small" type="primary">{{ bookingStore.selectedCatRoom.area }}㎡</el-tag>
+                    <el-tag v-if="bookingStore.selectedCatRoom.floor" size="small" type="info">{{ bookingStore.selectedCatRoom.floor }}楼</el-tag>
+                    <el-tag v-if="bookingStore.selectedCatRoom.location" size="small">{{ bookingStore.selectedCatRoom.location }}</el-tag>
                   </p>
                   <p class="room-price">¥{{ bookingStore.selectedCatRoom.price }}/晚</p>
                 </div>

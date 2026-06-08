@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import type { User, LoginRequest, RegisterRequest } from '@/types'
-import { login, logout, getUserInfo, register } from '@/api/auth'
+import { login, logout, getUserInfo, register, updateUserInfo, changePassword } from '@/api/auth'
 import { setToken, removeToken, getToken, setUser, getUser, removeUser, clearAuth } from '@/utils/auth'
 
 export const useUserStore = defineStore('user', () => {
