@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, status
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from app.config.settings import settings
@@ -228,7 +229,7 @@ def create_app() -> FastAPI:
         # 生命周期管理
         lifespan=lifespan,
         # 响应类型
-        default_response_class=None,
+        default_response_class=JSONResponse,
     )
 
     # 生产环境启用HTTPS重定向
@@ -278,6 +279,7 @@ def register_health_check(app: FastAPI) -> None:
     from app.utils.redis_lock import redis_manager
 
     @app.get("/health", summary="健康检查", tags=["系统"])
+    @app.get("/api/v1/health", summary="健康检查", tags=["系统"], include_in_schema=False)
     async def health_check():
         """
         服务健康检查接口
@@ -288,6 +290,7 @@ def register_health_check(app: FastAPI) -> None:
             健康状态信息
         """
         import time
+        from sqlalchemy import text
 
         status_result = {
             "status": "healthy",
@@ -302,7 +305,7 @@ def register_health_check(app: FastAPI) -> None:
         try:
             engine = db_manager.get_engine()
             async with engine.connect() as conn:
-                await conn.execute("SELECT 1")
+                await conn.execute(text("SELECT 1"))
             status_result["checks"]["database"] = "healthy"
         except Exception as e:
             status_result["checks"]["database"] = f"unhealthy: {str(e)}"
@@ -315,11 +318,10 @@ def register_health_check(app: FastAPI) -> None:
             status_result["checks"]["redis"] = "healthy"
         except Exception as e:
             status_result["checks"]["redis"] = f"unhealthy: {str(e)}"
-            # Redis不健康不影响整体服务状态，标记为degraded
             if status_result["status"] == "healthy":
                 status_result["status"] = "degraded"
 
-        return status_result
+        return JSONResponse(content=status_result)
 
     @app.get("/", summary="根路径", include_in_schema=False)
     async def root():

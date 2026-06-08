@@ -14,6 +14,8 @@ from .user import (
     UserResponse,
     UserUpdate,
     TokenResponse,
+    UserCreate,
+    UserLogin,
 )
 from .cat_room import (
     CatRoomCreate,
@@ -83,6 +85,8 @@ __all__ = [
     "UserResponse",
     "UserUpdate",
     "TokenResponse",
+    "UserCreate",
+    "UserLogin",
     "CatRoomCreate",
     "CatRoomUpdate",
     "CatRoomResponse",

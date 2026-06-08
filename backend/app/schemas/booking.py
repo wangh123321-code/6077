@@ -6,6 +6,7 @@ from app.models.booking import BookingStatus
 from app.models.booking_service import BookingServiceStatus
 from app.schemas.cat_room import CatRoomResponse
 from app.schemas.service import ServiceResponse
+from .common import PaginationRequest
 
 
 class AddonServiceRequest(BaseModel):
@@ -122,3 +123,44 @@ class VerifyRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     verify_code: str = Field(..., description="核销码")
+
+
+BookingServiceItem = BookingServiceResponse
+
+CreateBookingRequest = BookingCreateRequest
+
+VerifyBookingRequest = VerifyRequest
+
+AddServiceRequest = BookingAddonServiceRequest
+
+
+class CancelBookingRequest(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    order_no: str = Field(..., description="订单号")
+    cancel_reason: Optional[str] = Field(None, description="取消原因")
+
+
+class BookingFilterRequest(PaginationRequest):
+    model_config = ConfigDict(from_attributes=True)
+
+    status: Optional[BookingStatus] = Field(None, description="预订状态")
+    start_date: Optional[date] = Field(None, description="开始日期")
+    end_date: Optional[date] = Field(None, description="结束日期")
+
+
+class RefundAmountResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    order_no: str = Field(..., description="订单号")
+    refund_amount: Decimal = Field(..., description="退款金额")
+    total_amount: Decimal = Field(..., description="订单总金额")
+
+
+class BookingQRCodeResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    order_no: str = Field(..., description="订单号")
+    qr_code_url: str = Field(..., description="二维码URL")
+    verify_code: str = Field(..., description="核销码")
+    expire_time: datetime = Field(..., description="过期时间")

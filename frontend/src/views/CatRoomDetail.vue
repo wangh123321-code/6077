@@ -228,7 +228,6 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import {
-  Check,
   InfoFilled,
   Tools,
   Calendar,
@@ -239,7 +238,6 @@ import {
   Avatar,
   CircleCheckFilled
 } from '@element-plus/icons-vue'
-import DatePicker from '@/components/DatePicker.vue'
 import ServiceSelector from '@/components/ServiceSelector.vue'
 import { getCatRoomDetail, getCatRoomAvailability } from '@/api/catRoom'
 import { getServiceList } from '@/api/service'

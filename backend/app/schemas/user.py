@@ -17,6 +17,9 @@ class UserCreate(UserBase):
     password: str = Field(..., description="密码", min_length=6, max_length=50)
 
 
+RegisterRequest = UserCreate
+
+
 class UserUpdate(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -35,6 +38,9 @@ class UserResponse(UserBase):
 class UserLogin(BaseModel):
     phone: str = Field(..., description="手机号", min_length=11, max_length=20)
     password: str = Field(..., description="密码", min_length=6, max_length=50)
+
+
+LoginRequest = UserLogin
 
 
 class TokenResponse(BaseModel):

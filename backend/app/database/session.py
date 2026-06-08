@@ -2,6 +2,8 @@
 数据库会话管理模块
 提供SQLAlchemy异步连接、会话管理和连接池优化
 """
+import asyncio
+import logging
 from typing import AsyncGenerator, Optional
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -13,6 +15,8 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.pool import AsyncAdaptedQueuePool
 
 from app.config.settings import settings
+
+logger = logging.getLogger(__name__)
 
 
 # 数据库模型基类
@@ -144,9 +148,26 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 async def init_database() -> None:
     """初始化数据库连接和表结构（应用启动时调用）"""
     db_manager.init_engine()
-    # 生产环境建议使用Alembic进行数据库迁移
-    if settings.ENV == "development":
-        await db_manager.create_tables()
+    
+    max_retries = 30
+    retry_delay = 5
+    
+    for attempt in range(max_retries):
+        try:
+            if settings.ENV == "development":
+                await db_manager.create_tables()
+            else:
+                async with db_manager._engine.begin():
+                    pass
+            logger.info("数据库连接成功！")
+            return
+        except Exception as e:
+            if attempt < max_retries - 1:
+                logger.warning(f"数据库连接失败 ({attempt + 1}/{max_retries})，{retry_delay}秒后重试: {e}")
+                await asyncio.sleep(retry_delay)
+            else:
+                logger.error(f"数据库连接失败，已达到最大重试次数: {e}")
+                raise
 
 
 async def close_database() -> None:

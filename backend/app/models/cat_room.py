@@ -19,7 +19,7 @@ class CatRoom(BaseModel):
     price_per_day = Column(Numeric(10, 2), nullable=False)
     facilities = Column(ARRAY(String), default=[])
     images = Column(ARRAY(String), default=[])
-    status = Column(Enum(CatRoomStatus), default=CatRoomStatus.AVAILABLE, nullable=False)
+    status = Column(Enum(CatRoomStatus, values_callable=lambda x: [e.value for e in x]), default=CatRoomStatus.AVAILABLE, nullable=False)
     area = Column(Numeric(5, 2))
     floor = Column(Integer)
     location = Column(String(200))

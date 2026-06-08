@@ -17,7 +17,7 @@ class Refund(BaseModel):
     order_no = Column(String(32), ForeignKey("bookings.order_no"), nullable=False, index=True)
     refund_amount = Column(Numeric(10, 2), nullable=False)
     refund_reason = Column(String(500))
-    status = Column(Enum(RefundStatus), default=RefundStatus.PENDING, nullable=False)
+    status = Column(Enum(RefundStatus, values_callable=lambda x: [e.value for e in x]), default=RefundStatus.PENDING, nullable=False)
     approver_id = Column(Integer, ForeignKey("users.id"), index=True)
 
     booking = relationship("Booking", back_populates="refunds")

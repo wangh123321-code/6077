@@ -48,22 +48,10 @@ class RedisManager:
                 settings.REDIS_URL,
                 # 连接池大小
                 max_connections=settings.REDIS_POOL_SIZE,
-                # Socket读取超时时间
-                socket_timeout=settings.REDIS_SOCKET_TIMEOUT,
-                # Socket连接超时时间
-                socket_connect_timeout=settings.REDIS_SOCKET_CONNECT_TIMEOUT,
-                # 连接池是否阻塞等待
-                pool_block=True,
-                # 连接池最大等待时间（毫秒）
-                pool_timeout=5000,
                 # 编码
                 encoding="utf-8",
                 # 自动解码响应
                 decode_responses=True,
-                # 健康检查间隔（秒）
-                health_check_interval=30,
-                # 重试次数
-                retry_on_timeout=3
             )
 
             # 测试连接

@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # ========== 基础配置 ==========
     # 项目名称
-    PROJECT_NAME: str = "猫咪民宿预订管理系统"
+    PROJECT_NAME: str = "FastAPI 后端服务"
     # 项目版本
     PROJECT_VERSION: str = "1.0.0"
     # API前缀
@@ -36,10 +36,16 @@ class Settings(BaseSettings):
     DB_USER: str = "postgres"
     DB_PASSWORD: str = "postgres"
     DB_NAME: str = "fastapi_db"
+    DATABASE_URL: Optional[str] = None
     # 数据库连接URL（自动构建）
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         """构建异步数据库连接URL"""
+        if self.DATABASE_URL:
+            url = self.DATABASE_URL
+            if url.startswith("postgresql://"):
+                url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+            return url
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     # 数据库连接池配置
@@ -101,19 +107,25 @@ class Settings(BaseSettings):
     # 备份保留天数
     BACKUP_RETENTION_DAYS: int = 30
     # 备份目录
-    BACKUP_DIR: str = "/app/backups"
-    # 备份时间（小时，0-23）
-    BACKUP_HOUR: int = 3
+    BACKUP_DIR: str = "/backup"
+    # 备份时间（小时，0-23）- 每天凌晨2点
+    BACKUP_HOUR: int = 2
     # 备份时间（分钟，0-59）
     BACKUP_MINUTE: int = 0
     # 是否压缩备份文件
     BACKUP_COMPRESS: bool = True
     # 备份文件名前缀
-    BACKUP_PREFIX: str = "fastapi_db_backup"
-    # 是否上传到S3
+    BACKUP_PREFIX: str = "cat_hotel_db_backup"
+    # 是否上传到S3兼容云存储
     BACKUP_UPLOAD_S3: bool = False
+    # S3 兼容云存储端点
+    BACKUP_S3_ENDPOINT: str = ""
     # S3 Bucket名称
     BACKUP_S3_BUCKET: str = ""
+    # S3访问密钥
+    BACKUP_S3_ACCESS_KEY: str = ""
+    # S3秘密密钥
+    BACKUP_S3_SECRET_KEY: str = ""
     # S3路径前缀
     BACKUP_S3_PREFIX: str = "backups/"
 

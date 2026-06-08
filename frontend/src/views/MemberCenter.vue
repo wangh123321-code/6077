@@ -91,7 +91,7 @@
                   <p>享受{{ memberInfo.discount }}折优惠</p>
                 </div>
                 <div class="privilege-item">
-                  <el-icon size="32" color="#67c23a"><Gift /></el-icon>
+                  <el-icon size="32" color="#67c23a"><Present /></el-icon>
                   <h4>生日礼包</h4>
                   <p>生日当月赠送专属礼包</p>
                 </div>
@@ -170,7 +170,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Medal, GoldMedal, Document, PriceTag, Gift, Service, Star } from '@element-plus/icons-vue'
+import { User, Medal, GoldMedal, Document, PriceTag, Present, Service, Star } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import { getMemberInfo, getMemberPointsHistory, upgradeMember } from '@/api/member'
 import { updateUserInfo } from '@/api/auth'

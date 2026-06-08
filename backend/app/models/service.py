@@ -15,7 +15,7 @@ class Service(BaseModel):
     name = Column(String(100), nullable=False)
     description = Column(String(500))
     price = Column(Numeric(10, 2), nullable=False)
-    type = Column(Enum(ServiceType), default=ServiceType.BASIC, nullable=False)
+    type = Column(Enum(ServiceType, values_callable=lambda x: [e.value for e in x]), default=ServiceType.BASIC, nullable=False)
     duration = Column(Integer)
     applicable_scene = Column(String(200))
 

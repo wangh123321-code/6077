@@ -15,7 +15,7 @@ class PointRecord(BaseModel):
     __tablename__ = "point_records"
 
     member_id = Column(Integer, ForeignKey("members.id"), nullable=False, index=True)
-    type = Column(Enum(PointType), nullable=False)
+    type = Column(Enum(PointType, values_callable=lambda x: [e.value for e in x]), nullable=False)
     points = Column(Integer, nullable=False)
     description = Column(String(200), nullable=False)
     balance_before = Column(Integer, nullable=False)

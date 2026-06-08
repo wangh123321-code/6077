@@ -3,7 +3,7 @@ import os
 
 bind = "0.0.0.0:8000"
 
-workers = int(os.getenv("GUNICORN_WORKERS", multiprocessing.cpu_count() * 2 + 1))
+workers = int(os.getenv("GUNICORN_WORKERS", 3))
 
 worker_class = "uvicorn.workers.UvicornWorker"
 
@@ -26,8 +26,8 @@ reuse_port = True
 
 chdir = "/app"
 
-accesslog = os.getenv("GUNICORN_ACCESS_LOG", "/app/logs/gunicorn_access.log")
-errorlog = os.getenv("GUNICORN_ERROR_LOG", "/app/logs/gunicorn_error.log")
+accesslog = os.getenv("GUNICORN_ACCESS_LOG", "-")
+errorlog = os.getenv("GUNICORN_ERROR_LOG", "-")
 loglevel = os.getenv("GUNICORN_LOG_LEVEL", "info")
 
 access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s" %(D)s %(L)s'

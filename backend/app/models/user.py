@@ -17,7 +17,7 @@ class User(BaseModel):
     password_hash = Column(String(255), nullable=False)
     nickname = Column(String(50))
     avatar = Column(String(255))
-    role = Column(Enum(UserRole), default=UserRole.USER, nullable=False)
+    role = Column(Enum(UserRole, values_callable=lambda x: [e.value for e in x]), default=UserRole.USER, nullable=False)
 
     bookings = relationship("Booking", back_populates="user")
     members = relationship("Member", back_populates="user")

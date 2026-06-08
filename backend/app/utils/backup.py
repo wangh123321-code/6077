@@ -30,12 +30,12 @@ class BackupService:
         self.s3_bucket = settings.BACKUP_S3_BUCKET
         self.s3_prefix = settings.BACKUP_S3_PREFIX
 
-        if self.upload_s3 and settings.BACKUP_S3_BUCKET:
+        if self.upload_s3:
             self.s3_client = boto3.client(
                 's3',
-                endpoint_url=settings.BACKUP_S3_ENDPOINT if settings.BACKUP_S3_ENDPOINT else None,
-                aws_access_key_id=settings.BACKUP_S3_ACCESS_KEY,
-                aws_secret_access_key=settings.BACKUP_S3_SECRET_KEY,
+                endpoint_url=os.getenv('S3_ENDPOINT_URL'),
+                aws_access_key_id=os.getenv('S3_ACCESS_KEY_ID'),
+                aws_secret_access_key=os.getenv('S3_SECRET_ACCESS_KEY'),
                 region_name=os.getenv('S3_REGION', 'us-east-1')
             )
         else:

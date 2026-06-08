@@ -20,7 +20,7 @@ class BookingService(BaseModel):
     price = Column(Numeric(10, 2), nullable=False)
     execute_time = Column(DateTime)
     executor_id = Column(Integer, ForeignKey("users.id"), index=True)
-    status = Column(Enum(BookingServiceStatus), default=BookingServiceStatus.PENDING, nullable=False)
+    status = Column(Enum(BookingServiceStatus, values_callable=lambda x: [e.value for e in x]), default=BookingServiceStatus.PENDING, nullable=False)
 
     booking = relationship("Booking", back_populates="booking_services")
     service = relationship("Service", back_populates="booking_services")

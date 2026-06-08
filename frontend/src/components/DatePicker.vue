@@ -20,7 +20,7 @@ import { getToday, addDays } from '@/utils/date'
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: [string, string]
+    modelValue?: [string, string] | null
     startPlaceholder?: string
     endPlaceholder?: string
     minDate?: string
@@ -42,7 +42,7 @@ const dates = ref<[string, string] | null>(props.modelValue || null)
 watch(
   () => props.modelValue,
   (val) => {
-    dates.value = val
+    dates.value = val ?? null
   }
 )
 

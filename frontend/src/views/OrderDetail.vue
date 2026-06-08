@@ -114,7 +114,7 @@
               >
                 <div class="service-icon" :class="service.category">
                   <el-icon v-if="service.category === '洗护'"><Odometer /></el-icon>
-                  <el-icon v-else-if="service.category === '医疗'"><Stethoscope /></el-icon>
+                  <el-icon v-else-if="service.category === '医疗'"><IceCream /></el-icon>
                   <el-icon v-else-if="service.category === '美容'"><MagicStick /></el-icon>
                   <el-icon v-else><Goods /></el-icon>
                 </div>
@@ -201,7 +201,7 @@
                 class="payment-item"
               >
                 <div class="payment-icon" :class="record.type">
-                  <el-icon><ChatDotRound v-if="record.method === 'wechat'" /></el-icon>
+                  <el-icon v-if="record.method === 'wechat'"><ChatDotRound /></el-icon>
                   <el-icon v-else-if="record.method === 'alipay'"><CreditCard /></el-icon>
                   <el-icon v-else><Wallet /></el-icon>
                 </div>
@@ -221,7 +221,7 @@
           <el-card class="qrcode-card" v-if="order.paymentStatus === 'paid' && (order.status === 'confirmed' || order.status === 'paid')">
             <template #header>
               <div class="card-header">
-                <el-icon><QRCode /></el-icon>
+                <el-icon><Camera /></el-icon>
                 <span>核销码</span>
               </div>
             </template>
@@ -284,12 +284,10 @@
               <div class="method-row">
                 <span class="method-label">支付方式</span>
                 <el-tag size="small">
-                  <el-icon style="margin-right: 4px;">
-                    <ChatDotRound v-if="order.paymentMethod === 'wechat'" />
-                    <CreditCard v-else-if="order.paymentMethod === 'alipay'" />
-                    <Wallet v-else-if="order.paymentMethod === 'balance'" />
-                    <QuestionFilled v-else />
-                  </el-icon>
+                  <el-icon v-if="order.paymentMethod === 'wechat'" style="margin-right: 4px;"><ChatDotRound /></el-icon>
+                  <el-icon v-else-if="order.paymentMethod === 'alipay'" style="margin-right: 4px;"><CreditCard /></el-icon>
+                  <el-icon v-else-if="order.paymentMethod === 'balance'" style="margin-right: 4px;"><Wallet /></el-icon>
+                  <el-icon v-else style="margin-right: 4px;"><QuestionFilled /></el-icon>
                   {{ getPaymentMethodName(order.paymentMethod) }}
                 </el-tag>
               </div>
@@ -346,7 +344,7 @@
               class="action-btn"
               @click="handleRefund"
             >
-              <el-icon><Refund /></el-icon>
+              <el-icon><Money /></el-icon>
               申请退款
             </el-button>
             <el-button
@@ -394,7 +392,7 @@ import {
   Right,
   Goods,
   Odometer,
-  Stethoscope,
+  IceCream,
   MagicStick,
   Timer,
   Avatar,
@@ -402,7 +400,7 @@ import {
   Wallet,
   ChatDotRound,
   CreditCard,
-  QRCode,
+  Camera,
   Money,
   QuestionFilled,
   Plus,
@@ -411,25 +409,20 @@ import {
   RefreshRight,
   ArrowLeft,
   CircleCheck,
-  Loading,
-  Refund
+  Loading
 } from '@element-plus/icons-vue'
 import { getBookingDetail, cancelBooking, payBooking } from '@/api/booking'
 import {
-  formatDateTime,
   getOrderStatusLabel,
   getPaymentStatusLabel,
   getPaymentMethodName,
-  orderStatusMap,
   paymentStatusMap
 } from '@/utils/payment'
-import { getDaysDiff } from '@/utils/date'
-import { useBookingStore } from '@/stores/booking'
+import { getDaysDiff, formatDateTime } from '@/utils/date'
 import type { Booking } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
-const bookingStore = useBookingStore()
 
 const loading = ref(false)
 const order = ref<Booking | null>(null)

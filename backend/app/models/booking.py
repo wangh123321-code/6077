@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Numeric, Date, ForeignKey, Enum, UniqueConstraint
+from sqlalchemy import Column, String, Integer, Numeric, Date, ForeignKey, Enum, Index, text
 from sqlalchemy.orm import relationship
 from .base import BaseModel
 import enum
@@ -17,10 +17,11 @@ class BookingStatus(str, enum.Enum):
 class Booking(BaseModel):
     __tablename__ = "bookings"
     __table_args__ = (
-        UniqueConstraint(
+        Index(
+            "unique_room_date_booking",
             "cat_room_id", "check_in_date", "check_out_date",
-            name="unique_room_date_booking",
-            postgresql_where="status NOT IN ('cancelled', 'refunded')"
+            unique=True,
+            postgresql_where=text("status NOT IN ('cancelled', 'refunded')")
         ),
     )
 
@@ -33,7 +34,7 @@ class Booking(BaseModel):
     cat_age = Column(Integer)
     cat_food_brand = Column(String(100))
     special_requirements = Column(String(500))
-    status = Column(Enum(BookingStatus), default=BookingStatus.PENDING, nullable=False)
+    status = Column(Enum(BookingStatus, values_callable=lambda x: [e.value for e in x]), default=BookingStatus.PENDING, nullable=False)
     total_price = Column(Numeric(10, 2), nullable=False)
     verify_code = Column(String(32), unique=True, index=True)
 

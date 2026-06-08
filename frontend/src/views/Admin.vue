@@ -11,7 +11,7 @@
             <el-col :span="6">
               <el-card class="stat-card">
                 <div class="stat-icon" style="background: #409eff">
-                  <el-icon size="32" color="#fff"><User /></el-icon>
+                  <el-icon size="32" color="#fff"><UserIcon /></el-icon>
                 </div>
                 <div class="stat-content">
                   <div class="stat-value">{{ stats.totalUsers }}</div>
@@ -180,7 +180,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { User, HomeFilled, Document, Money, Plus } from '@element-plus/icons-vue'
+import { User as UserIcon, HomeFilled, Document, Money, Plus } from '@element-plus/icons-vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'

@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from typing import Optional, List
+from typing import Optional, List, Annotated
 from decimal import Decimal
 from enum import Enum
 from pydantic import BaseModel, Field, ConfigDict
@@ -17,7 +17,7 @@ class PointType(str, Enum):
 class MemberRechargeRequest(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    amount: Decimal = Field(..., gt=0, max_digits=10, decimal_places=2, description="充值金额")
+    amount: Annotated[Decimal, Field(max_digits=10, decimal_places=2)] = Field(..., gt=0, description="充值金额")
     payment_method: str = Field("wechat", description="支付方式")
 
 
@@ -86,3 +86,8 @@ class PointExchangeResponse(BaseModel):
     points_after: int
     status: str
     created_at: datetime
+
+
+MemberRecharge = MemberRechargeRequest
+
+PointsRecord = PointRecordResponse

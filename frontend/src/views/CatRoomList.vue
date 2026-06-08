@@ -119,10 +119,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { Search, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
 import CatRoomCard from '@/components/CatRoomCard.vue'
 import DatePicker from '@/components/DatePicker.vue'
 import { getCatRoomList } from '@/api/catRoom'
@@ -319,7 +318,7 @@ function handleSizeChange() {
   fetchRooms()
 }
 
-function removeFilter(key: string, value: any) {
+function removeFilter(key: string, _value: any) {
   switch (key) {
     case 'type':
       filterForm.type = ''

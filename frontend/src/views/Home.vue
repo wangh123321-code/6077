@@ -159,7 +159,6 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { HomeFilled, Camera, UserFilled, Dish, Calendar, ArrowRight } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
 import CatRoomCard from '@/components/CatRoomCard.vue'
 import DatePicker from '@/components/DatePicker.vue'
 import { getCatRoomList } from '@/api/catRoom'

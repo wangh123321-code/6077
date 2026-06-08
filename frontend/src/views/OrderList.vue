@@ -253,13 +253,12 @@ import {
 } from '@element-plus/icons-vue'
 import { getBookingList, cancelBooking, payBooking } from '@/api/booking'
 import {
-  formatDateTime,
   getOrderStatusLabel,
   getPaymentStatusLabel,
   orderStatusMap,
   paymentStatusMap
 } from '@/utils/payment'
-import { getDaysDiff } from '@/utils/date'
+import { getDaysDiff, formatDateTime } from '@/utils/date'
 import type { Booking } from '@/types'
 
 const router = useRouter()
@@ -426,7 +425,7 @@ async function handlePay(order: Booking) {
   }
 }
 
-function handleRemindPay(order: Booking) {
+function handleRemindPay(_order: Booking) {
   ElMessage.info('支付提醒已发送，请在30分钟内完成支付')
 }
 
@@ -449,7 +448,7 @@ async function handleCancel(order: Booking) {
   }
 }
 
-function handleReview(order: Booking) {
+function handleReview(_order: Booking) {
   ElMessage.info('评价功能开发中')
 }
 
@@ -461,7 +460,7 @@ function handleReorder(order: Booking) {
   }
 }
 
-function handleAddService(order: Booking) {
+function handleAddService(_order: Booking) {
   ElMessage.info('加购服务功能开发中')
 }
 
