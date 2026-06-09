@@ -12,6 +12,23 @@ from app.models.cat_info import CatInfo
 from app.models.member import Member
 from app.models.payment import Payment, PaymentStatus, PaymentMethod
 from app.models.refund import Refund, RefundStatus
+from app.models.schedule import (
+    Employee,
+    Shift,
+    SchedulingRule,
+    Schedule,
+    LeaveRequest,
+    ShiftSwap,
+    ShiftPreference,
+    Attendance,
+    AttendanceAlert,
+    SkillTag,
+    ShiftType,
+    LeaveType,
+    RequestStatus,
+    AttendanceStatus,
+    AlertType,
+)
 
 __all__ = [
     "Base",
@@ -33,4 +50,19 @@ __all__ = [
     "PaymentMethod",
     "Refund",
     "RefundStatus",
+    "Employee",
+    "Shift",
+    "SchedulingRule",
+    "Schedule",
+    "LeaveRequest",
+    "ShiftSwap",
+    "ShiftPreference",
+    "Attendance",
+    "AttendanceAlert",
+    "SkillTag",
+    "ShiftType",
+    "LeaveType",
+    "RequestStatus",
+    "AttendanceStatus",
+    "AlertType",
 ]

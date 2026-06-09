@@ -14,9 +14,10 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.config.settings import settings
 from app.core.middleware import register_middlewares
 from app.core.errors import register_exception_handlers, ErrorCode
-from app.database.session import init_database, close_database
+from app.database.session import init_database, close_database, get_db
 from app.utils.redis_lock import init_redis, close_redis
 from app.utils.backup import backup_service
+from app.services.attendance_service import send_daily_reminders, check_morning_attendance
 
 
 # ========== 日志配置 ==========
@@ -55,6 +56,32 @@ async def scheduled_backup():
         logger.info(f"定时备份完成: {result['filename']}, 大小: {result['size_mb']}MB")
     except Exception as e:
         logger.error(f"定时备份失败: {str(e)}", exc_info=True)
+
+
+async def scheduled_attendance_reminders():
+    """定时发送考勤提醒（每天凌晨执行）"""
+    logger = logging.getLogger(__name__)
+    logger.info("开始执行考勤提醒任务...")
+    try:
+        async for db in get_db():
+            results = await send_daily_reminders(db)
+            logger.info(f"考勤提醒任务完成，生成 {len(results)} 条提醒")
+            break
+    except Exception as e:
+        logger.error(f"考勤提醒任务失败: {str(e)}", exc_info=True)
+
+
+async def scheduled_morning_attendance_check():
+    """定时检查上午考勤情况（上班后15分钟）"""
+    logger = logging.getLogger(__name__)
+    logger.info("开始执行上午考勤检查任务...")
+    try:
+        async for db in get_db():
+            results = await check_morning_attendance(db)
+            logger.info(f"上午考勤检查完成，生成 {len(results)} 条异常提醒")
+            break
+    except Exception as e:
+        logger.error(f"上午考勤检查任务失败: {str(e)}", exc_info=True)
 
 
 # ========== 应用生命周期管理 ==========
@@ -98,8 +125,35 @@ async def lifespan(app: FastAPI):
             id="daily_backup",
             replace_existing=True
         )
-        scheduler.start()
         logger.info("定时备份任务已启动")
+
+    # 启动考勤提醒定时任务（每天凌晨2点执行）
+    logger.info("正在启动考勤提醒定时任务，每天 02:00 执行")
+    scheduler.add_job(
+        scheduled_attendance_reminders,
+        "cron",
+        hour=2,
+        minute=0,
+        id="daily_attendance_reminders",
+        replace_existing=True
+    )
+    logger.info("考勤提醒定时任务已启动")
+
+    # 启动上午考勤检查定时任务（每天8:15执行，检查早班未打卡情况）
+    logger.info("正在启动上午考勤检查定时任务，每天 08:15 执行")
+    scheduler.add_job(
+        scheduled_morning_attendance_check,
+        "cron",
+        hour=8,
+        minute=15,
+        id="morning_attendance_check",
+        replace_existing=True
+    )
+    logger.info("上午考勤检查定时任务已启动")
+
+    # 启动调度器
+    scheduler.start()
+    logger.info("定时任务调度器已启动")
 
     logger.info(f"{settings.PROJECT_NAME} 启动成功，运行环境: {settings.ENV}")
 
@@ -109,10 +163,10 @@ async def lifespan(app: FastAPI):
     logger.info("正在关闭应用...")
 
     # 关闭定时任务调度器
-    if settings.BACKUP_ENABLED and scheduler.running:
-        logger.info("正在关闭定时备份调度器...")
+    if scheduler.running:
+        logger.info("正在关闭定时任务调度器...")
         scheduler.shutdown()
-        logger.info("定时备份调度器已关闭")
+        logger.info("定时任务调度器已关闭")
 
     # 关闭数据库连接
     logger.info("正在关闭数据库连接...")

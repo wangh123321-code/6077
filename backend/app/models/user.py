@@ -22,3 +22,4 @@ class User(BaseModel):
     bookings = relationship("Booking", back_populates="user")
     members = relationship("Member", back_populates="user")
     cat_infos = relationship("CatInfo", back_populates="user")
+    employee = relationship("Employee", back_populates="user", uselist=False)

@@ -61,6 +61,36 @@ const routes: RouteRecordRaw[] = [
     name: 'Admin',
     component: () => import('@/views/Admin.vue'),
     meta: { title: '后台管理', requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/schedule/config',
+    name: 'ScheduleConfig',
+    component: () => import('@/views/ScheduleConfig.vue'),
+    meta: { title: '排班配置', requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/schedule/calendar',
+    name: 'ScheduleCalendar',
+    component: () => import('@/views/ScheduleCalendar.vue'),
+    meta: { title: '排班日历', requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/leave-request',
+    name: 'LeaveRequest',
+    component: () => import('@/views/LeaveRequest.vue'),
+    meta: { title: '请假申请', requiresAuth: true }
+  },
+  {
+    path: '/attendance',
+    name: 'Attendance',
+    component: () => import('@/views/Attendance.vue'),
+    meta: { title: '考勤打卡', requiresAuth: true }
+  },
+  {
+    path: '/attendance/report',
+    name: 'AttendanceReport',
+    component: () => import('@/views/AttendanceReport.vue'),
+    meta: { title: '考勤报表', requiresAuth: true, requiresAdmin: true }
   }
 ]
 
